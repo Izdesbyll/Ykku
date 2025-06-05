@@ -3,7 +3,7 @@ from ebooklib import ITEM_DOCUMENT
 from bs4 import BeautifulSoup
 from collections import Counter
 import re
-from googletrans import Translator
+from deep_translator import GoogleTranslator, single_detection
 
 def extract_text_from_epub(epub_path):
     book = epub.read_epub(epub_path)
@@ -30,9 +30,10 @@ def replace_words(text, replacements):
     return re.sub(pattern, replacer, text, flags=re.IGNORECASE)
 
 def detect_source_language(text):
-    translator = Translator()
-    detection = translator.detect(text)
-    return detection.lang
+    return single_detection(text, api='google')
+
+def translate_word(word, source_lang, target_lang):
+    return GoogleTranslator(source=source_lang, target=target_lang).translate(word)
 
 def convert_text_to_epub(text_paragraphs, output_path, title="Gradual Translation", author="Booklingual Bot"):
     book = epub.EpubBook()
@@ -90,7 +91,7 @@ def gradual_translate_epub(epub_input_path, epub_output_path, target_lang, max_w
         if new_words:
             word_to_translate = new_words[0]
             try:
-                translated = translator.translate(word_to_translate, src=source_lang, dest=target_lang).text
+                translated = translate_word(word_to_translate, source_lang, target_lang)
                 translated_words[word_to_translate] = translated
                 seen_words.add(word_to_translate)
                 for j in range(i, len(paragraphs)):
