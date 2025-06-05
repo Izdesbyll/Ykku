@@ -23,7 +23,7 @@ def extract_text_and_translate(epub_path, target_lang):
     new_items = []
 
     for item in book.items:
-        if item.get_type() == epub.ITEM_DOCUMENT:
+        if isinstance(item, epub.EpubHtml):
             soup = BeautifulSoup(item.get_body_content(), "html.parser")
             paragraphs = soup.find_all("p")
             translated_paragraphs = []
