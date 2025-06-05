@@ -47,7 +47,7 @@ def main():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("setlang", setlang))
-    app.add_handler(MessageHandler(filters.Document.FILE_EXTENSION("epub"), handle_file))
+    app.add_handler(MessageHandler(filters.Document.MIME_TYPE("application/epub+zip"), handle_file))
     print("Bot running...")
     app.run_polling()
 
