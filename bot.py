@@ -2,6 +2,7 @@ import os
 import tempfile
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, ContextTypes, filters
+from telegram.ext import Application
 from utils import gradual_translate_epub
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
@@ -47,7 +48,7 @@ def main():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("setlang", setlang))
-    app.add_handler(MessageHandler(filters.Document.mime_type("application/epub+zip"), handle_file))
+    app.add_handler(MessageHandler(filters.Document.MimeType.EPUB, handle_file))
     print("Bot running...")
     app.run_polling()
 
